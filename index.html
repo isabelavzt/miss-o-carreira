@@ -1,0 +1,1343 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Missão Carreira</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #f3f4f6;
+        background:
+          radial-gradient(ellipse at 12% 10%, rgba(29, 41, 64, 0.6) 0%, transparent 42%),
+          linear-gradient(180deg, #0f172a 0%, #111827 52%, #0f172a 100%);
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      button,
+      a {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .screen {
+        min-height: 100vh;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 18px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .intro-screen {
+        align-items: stretch;
+        padding-top: 0;
+      }
+
+      .screen.active {
+        display: flex;
+      }
+
+      .ambient {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .technical-grid {
+        position: fixed;
+        inset: 56px 0 0;
+        pointer-events: none;
+        opacity: 0.46;
+        background:
+          radial-gradient(circle at 50% 0%, rgba(13, 59, 130, 0.07), transparent 42%),
+          linear-gradient(rgba(13, 59, 130, 0.045) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(13, 59, 130, 0.045) 1px, transparent 1px);
+        background-size: auto, 48px 48px, 48px 48px;
+        mask-image: linear-gradient(180deg, #000 0%, transparent 78%);
+      }
+
+      .topbar-institutional {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 20;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 18px;
+        color: #ffffff;
+        background: #0d3b82;
+        box-shadow: 0 2px 12px rgba(13, 59, 130, 0.14);
+      }
+
+      .topbar-inner {
+        width: min(100%, 1040px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .topbar-meta {
+        color: rgba(255, 255, 255, 0.78);
+        font-weight: 600;
+      }
+
+      .intro-shell {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding-top: 56px;
+      }
+
+      .title-icon {
+        width: 46px;
+        height: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        border-radius: 14px;
+        color: #0d3b82;
+        background: #eef2f7;
+        border: 1px solid rgba(13, 59, 130, 0.1);
+        font-size: 24px;
+      }
+
+      .journey-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 22px;
+        color: #6b7280;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .journey-rail {
+        width: 86px;
+        height: 6px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #e5e7eb;
+      }
+
+      .journey-rail span {
+        display: block;
+        width: 20%;
+        height: 100%;
+        border-radius: inherit;
+        background: #f58220;
+      }
+
+      .glow {
+        position: absolute;
+        border-radius: 999px;
+        filter: blur(72px);
+        opacity: 0.03;
+      }
+
+      .glow.sky {
+        width: 320px;
+        height: 320px;
+        background: #1a2233;
+        top: 12%;
+        left: 14%;
+      }
+
+      .glow.orange {
+        width: 420px;
+        height: 420px;
+        background: #d9a441;
+        right: 10%;
+        bottom: 8%;
+      }
+
+      .wrap {
+        position: relative;
+        z-index: 1;
+        width: min(100%, 620px);
+        margin: 0 auto;
+      }
+
+      .center {
+        text-align: center;
+      }
+
+      .card {
+        background: #162033;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+      }
+
+      .panel {
+        padding: 28px;
+      }
+
+      .section-gap {
+        margin-top: 24px;
+      }
+
+      .section-gap-lg {
+        margin-top: 32px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        color: #b6c2d1;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #d9a441;
+      }
+
+      .logo {
+        width: min(100%, 320px);
+        min-height: 104px;
+        margin: 36px auto 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        padding: 18px 22px;
+        border-radius: 16px;
+        background: #162033;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+      }
+
+      .logo-mark {
+        width: 72px;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        border-radius: 12px;
+        background: #d9a441;
+        color: #111827;
+        font-size: 38px;
+        font-weight: 800;
+        line-height: 1;
+      }
+
+      .logo-word {
+        color: #f3f4f6;
+        font-size: 40px;
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: 0.04em;
+      }
+
+      h1,
+      h2,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 18px;
+        font-size: clamp(32px, 6vw, 44px);
+        line-height: 1.12;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin-bottom: 18px;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .gradient-text {
+        color: #f3f4f6;
+      }
+
+      .lead {
+        color: #b6c2d1;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .highlight {
+        color: #b6c2d1;
+        font-weight: 600;
+      }
+
+      .button {
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 56px;
+        padding: 14px 22px;
+        border: 0;
+        border-radius: 12px;
+        color: #111827;
+        background: linear-gradient(180deg, #e0b14a 0%, #c9922e 100%);
+        box-shadow: none;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 16px;
+        text-decoration: none;
+        transition: filter 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+      }
+
+      .button:hover {
+        filter: brightness(1.05);
+        transform: translateY(-1px);
+      }
+
+      .button.secondary {
+        color: #b6c2d1;
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: none;
+      }
+
+      .button.secondary:hover {
+        color: #f3f4f6;
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.16);
+      }
+
+      .button:disabled {
+        color: #64748b;
+        background: rgba(255, 255, 255, 0.06);
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .small {
+        color: #9ca3af;
+        font-size: 13px;
+      }
+
+      label {
+        display: block;
+        color: #b6c2d1;
+        text-align: left;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      input {
+        width: 100%;
+        margin-top: 8px;
+        padding: 16px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        outline: none;
+        color: #f3f4f6;
+        background: #111827;
+      }
+
+      input:focus {
+        border-color: #d9a441;
+        background: #111827;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 28px;
+      }
+
+      .ghost {
+        border: 0;
+        color: #9ca3af;
+        background: transparent;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      .name {
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #e0b14a;
+        font-size: 14px;
+        font-weight: 700;
+        text-align: right;
+      }
+
+      .counter {
+        color: #9ca3af;
+        font-size: 14px;
+        text-align: right;
+      }
+
+      .progress {
+        height: 8px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        margin-bottom: 34px;
+      }
+
+      .progress span {
+        display: block;
+        height: 100%;
+        width: 0;
+        border-radius: inherit;
+        background: #d9a441;
+        transition: width 0.28s ease;
+      }
+
+      .question-label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+        color: #9ca3af;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .number {
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        color: #111827;
+        background: #d9a441;
+      }
+
+      .question {
+        padding: 28px;
+        margin-bottom: 28px;
+        font-size: clamp(18px, 4.8vw, 23px);
+        font-weight: 650;
+        line-height: 1.55;
+      }
+
+      .prompt {
+        margin-bottom: 14px;
+        color: #9ca3af;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .options {
+        display: grid;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+
+      .option {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-height: 78px;
+        padding: 18px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #b6c2d1;
+        background: #162033;
+        cursor: pointer;
+        text-align: left;
+        line-height: 1.55;
+        transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+      }
+
+      .option:hover {
+        border-color: rgba(217, 164, 65, 0.38);
+        background: #1d2940;
+      }
+
+      .option.selected {
+        color: #f3f4f6;
+        border-color: rgba(217, 164, 65, 0.55);
+        background: rgba(217, 164, 65, 0.1);
+      }
+
+      .letter {
+        width: 36px;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        border-radius: 10px;
+        color: #b6c2d1;
+        background: rgba(255, 255, 255, 0.1);
+        font-weight: 800;
+      }
+
+      .option.selected .letter {
+        color: #111827;
+        background: #d9a441;
+      }
+
+      .check {
+        margin-left: auto;
+        color: rgba(255, 255, 255, 0.75);
+      }
+
+      .dots {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 22px;
+      }
+
+      .dots span {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.16);
+      }
+
+      .dots span.current {
+        width: 24px;
+        background: #d9a441;
+      }
+
+      .dots span.done {
+        background: #9ca3af;
+      }
+
+      .profile-icon {
+        width: 96px;
+        height: 96px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        border-radius: 16px;
+        background: #1d2940;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        font-size: 44px;
+      }
+
+      .muted-label {
+        color: #9ca3af;
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .profile-title {
+        margin-bottom: 14px;
+        color: #f3f4f6;
+        font-size: clamp(32px, 7vw, 46px);
+        font-weight: 700;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .chip {
+        padding: 9px 12px;
+        border-radius: 12px;
+        color: #e0b14a;
+        background: rgba(217, 164, 65, 0.12);
+        border: 1px solid rgba(217, 164, 65, 0.28);
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .stack {
+        display: grid;
+        gap: 16px;
+      }
+
+      .mission {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+        border-radius: 14px;
+        background: #111827;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        color: #b6c2d1;
+        font-weight: 650;
+        line-height: 1.55;
+      }
+
+      .mission-number {
+        width: 26px;
+        height: 26px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        border-radius: 9px;
+        color: #111827;
+        background: #d9a441;
+        border: 1px solid rgba(217, 164, 65, 0.22);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .actions {
+        display: grid;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .trophy {
+        width: 84px;
+        height: 84px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        border-radius: 16px;
+        background: #1d2940;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        font-size: 46px;
+      }
+
+      .whatsapp {
+        display: grid;
+        gap: 16px;
+      }
+
+      @media (min-width: 640px) {
+        .actions,
+        .whatsapp {
+          grid-template-columns: 1fr 1fr;
+          align-items: center;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .topbar-inner {
+          justify-content: center;
+          text-align: center;
+        }
+
+        .topbar-meta {
+          display: none;
+        }
+
+        .logo {
+          width: min(100%, 286px);
+        }
+
+        .logo-word {
+          font-size: 34px;
+        }
+      }
+
+      /* Light enterprise theme inspired by Parex */
+      body {
+        color: #1f2937;
+        background: #f5f7fa;
+      }
+
+      .screen {
+        padding: 56px 20px;
+      }
+
+      .glow {
+        filter: blur(72px);
+        opacity: 0.08;
+      }
+
+      .glow.sky {
+        background: #dbe7f5;
+      }
+
+      .glow.orange {
+        background: #f58220;
+        opacity: 0.05;
+      }
+
+      .wrap {
+        width: min(100%, 640px);
+      }
+
+      .card,
+      .logo {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 18px;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      }
+
+      .panel {
+        padding: 30px;
+      }
+
+      .section-gap {
+        margin-top: 28px;
+      }
+
+      .section-gap-lg {
+        margin-top: 36px;
+      }
+
+      .badge {
+        color: #0d3b82;
+        background: #eef2f7;
+        border: 1px solid #e5e7eb;
+        font-weight: 700;
+      }
+
+      .dot {
+        background: #f58220;
+        box-shadow: none;
+      }
+
+      .logo {
+        margin: 38px auto 34px;
+        border-color: rgba(13, 59, 130, 0.12);
+        box-shadow: 0 10px 30px rgba(13, 59, 130, 0.08);
+      }
+
+      .logo img {
+        width: min(100%, 190px);
+        height: auto;
+        display: block;
+      }
+
+      .logo-mark {
+        color: #ffffff;
+        background: #0d3b82;
+      }
+
+      .logo-word,
+      .gradient-text,
+      h1,
+      .profile-title {
+        color: #0d3b82;
+      }
+
+      h1 {
+        font-size: clamp(30px, 6vw, 38px);
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      h2 {
+        color: #1f2937;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .lead {
+        color: #6b7280;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .highlight {
+        color: #4b5563;
+        font-weight: 600;
+      }
+
+      .small,
+      .counter,
+      .prompt,
+      .question-label,
+      .muted-label {
+        color: #6b7280;
+      }
+
+      .button {
+        color: #ffffff;
+        background: linear-gradient(180deg, #123e88 0%, #0d3b82 100%);
+        border: 1px solid transparent;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(13, 59, 130, 0.2);
+        font-weight: 700;
+      }
+
+      .button:hover {
+        background: linear-gradient(180deg, #16499c 0%, #0d3b82 100%);
+        filter: none;
+        transform: translateY(-2px);
+      }
+
+      .button.secondary {
+        color: #0d3b82;
+        background: transparent;
+        border: 1px solid #d1d5db;
+        box-shadow: none;
+      }
+
+      .button.secondary:hover {
+        color: #123e88;
+        background: #eef2f7;
+        border-color: #cbd5e1;
+      }
+
+      .button:disabled {
+        color: #9ca3af;
+        background: #e5e7eb;
+        box-shadow: none;
+      }
+
+      label {
+        color: #1f2937;
+      }
+
+      input {
+        color: #1f2937;
+        background: #ffffff;
+        border: 1px solid #d1d5db;
+      }
+
+      input:focus {
+        border-color: #0d3b82;
+        background: #ffffff;
+      }
+
+      .ghost {
+        color: #0d3b82;
+      }
+
+      .name {
+        color: #f58220;
+      }
+
+      .progress {
+        background: #e5e7eb;
+      }
+
+      .progress span,
+      .option.selected .letter,
+      .dots span.current {
+        background: #f58220;
+      }
+
+      .number,
+      .mission-number {
+        color: #ffffff;
+        background: #0d3b82;
+        box-shadow: none;
+      }
+
+      .question {
+        color: #1f2937;
+        padding: 30px;
+        line-height: 1.6;
+      }
+
+      .option {
+        color: #1f2937;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        line-height: 1.55;
+      }
+
+      .option:hover {
+        background: #f8fafc;
+        border-color: rgba(13, 59, 130, 0.22);
+      }
+
+      .option.selected {
+        color: #0d3b82;
+        background: rgba(245, 130, 32, 0.08);
+        border-color: rgba(245, 130, 32, 0.42);
+      }
+
+      .letter {
+        color: #0d3b82;
+        background: #eef2f7;
+      }
+
+      .check {
+        color: #f58220;
+      }
+
+      .dots span {
+        background: #d1d5db;
+      }
+
+      .dots span.done {
+        background: #0d3b82;
+      }
+
+      .profile-icon,
+      .trophy {
+        background: #eef2f7;
+        border: 1px solid #e5e7eb;
+        box-shadow: none;
+      }
+
+      .chip {
+        color: #0d3b82;
+        background: #eef2f7;
+        border: 1px solid #dbe4f0;
+      }
+
+      .mission {
+        color: #1f2937;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        line-height: 1.55;
+      }
+    </style>
+  </head>
+  <body>
+    <main id="app">
+      <section class="screen intro-screen active" data-screen="intro">
+        <header class="topbar-institutional">
+          <div class="topbar-inner">
+            <span>Parex</span>
+            <span class="topbar-meta">Desenvolvimento Profissional • Plataforma Interna</span>
+          </div>
+        </header>
+        <div class="ambient">
+          <div class="glow sky"></div>
+          <div class="glow orange"></div>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="intro-shell">
+          <div class="wrap center">
+            <div class="badge"><span class="dot"></span> Jornada de Desenvolvimento</div>
+            <div class="logo">
+              <img src="public/parex-logo.png" alt="Parex Engenharia" />
+            </div>
+            <div class="title-icon" aria-hidden="true">◎</div>
+            <h1><span class="gradient-text">Missão Carreira</span></h1>
+            <p class="lead">
+              Descubra seu perfil profissional e desbloqueie missões estratégicas para evoluir no seu PDI.<br />
+              <span class="highlight">Responda aos desafios e encontre o caminho ideal para sua evolução profissional.</span>
+            </p>
+            <button class="button" type="button" data-go="cadastro">Iniciar missão →</button>
+            <div class="journey-indicator" aria-label="Etapa 1 de 5">
+              <span>Etapa 1 de 5</span>
+              <div class="journey-rail"><span></span></div>
+            </div>
+            <p class="small section-gap">Leva aproximadamente 3 minutos</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="cadastro">
+        <div class="ambient">
+          <div class="glow sky"></div>
+          <div class="glow orange"></div>
+        </div>
+        <div class="wrap">
+          <form class="card panel" id="name-form">
+            <div class="badge"><span class="dot"></span> Cadastro inicial</div>
+            <h1 style="margin-top: 24px;">Antes de começar, diga seu nome.</h1>
+            <p class="lead">Vamos usar esse nome para deixar sua missão mais pessoal.</p>
+            <label>
+              Nome do colaborador
+              <input id="name-input" autocomplete="name" placeholder="Digite seu nome" />
+            </label>
+            <button class="button" id="name-submit" type="submit" style="margin-top: 20px;">Começar missão →</button>
+            <button class="ghost" type="button" data-go="intro" style="width: 100%; margin-top: 16px;">Voltar</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="quiz">
+        <div class="ambient">
+          <div class="glow sky"></div>
+          <div class="glow orange"></div>
+        </div>
+        <div class="wrap">
+          <div class="topbar">
+            <button class="ghost" type="button" id="back-button">← Anterior</button>
+            <div>
+              <div class="name" id="quiz-name"></div>
+              <div class="counter"><strong id="quiz-current">1</strong> / <span id="quiz-total">6</span></div>
+            </div>
+          </div>
+          <div class="progress"><span id="progress-fill"></span></div>
+          <div class="question-label"><span class="number" id="question-number">1</span> Desafio</div>
+          <div class="card question" id="question-text"></div>
+          <p class="prompt">Como você reagiria?</p>
+          <div class="options" id="options"></div>
+          <button class="button" id="next-button" type="button" disabled>Próximo desafio →</button>
+          <div class="dots" id="dots"></div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="resultado">
+        <div class="ambient">
+          <div class="glow sky"></div>
+          <div class="glow orange"></div>
+        </div>
+        <div class="wrap">
+          <div class="badge"><span class="dot"></span> Missão concluída</div>
+          <div class="card panel center section-gap-lg">
+            <div class="profile-icon" id="profile-icon"></div>
+            <p class="muted-label">Seu perfil profissional</p>
+            <h1 class="profile-title" id="profile-title"></h1>
+            <p class="lead" id="profile-description"></p>
+            <p class="highlight" id="result-name"></p>
+          </div>
+          <div class="card panel section-gap">
+            <h2>📍 Onde você pode atuar</h2>
+            <div class="chips" id="profile-areas"></div>
+          </div>
+          <div class="card panel section-gap">
+            <h2>🗺️ Seu PDI — Plano de Desenvolvimento</h2>
+            <p class="small">Suas missões sugeridas para desenvolver esse perfil</p>
+            <div class="stack" id="profile-pdi"></div>
+          </div>
+          <div class="actions">
+            <button class="button" type="button" data-go="final">Próximo passo →</button>
+            <button class="button secondary" type="button" id="restart-result">Reiniciar</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="final">
+        <div class="ambient">
+          <div class="glow sky"></div>
+          <div class="glow orange"></div>
+        </div>
+        <div class="wrap">
+          <div class="center">
+            <div class="trophy">🏆</div>
+            <div class="badge" id="final-badge"></div>
+            <h1 style="margin-top: 18px;">Próximo <span class="gradient-text">Passo</span></h1>
+            <p class="lead">Veja seu perfil e siga direto para os próximos passos.</p>
+          </div>
+          <div class="card panel">
+            <h2>Próximos passos</h2>
+            <div class="stack">
+              <div class="mission"><span class="mission-number">1</span> Guarde seu resultado</div>
+              <div class="mission"><span class="mission-number">2</span> Fale com seu gestor</div>
+              <div class="mission"><span class="mission-number">3</span> Aplique seu PDI</div>
+            </div>
+          </div>
+          <div class="card panel section-gap">
+            <h2>Lembre-se do seu PDI</h2>
+            <div class="stack" id="final-pdi"></div>
+          </div>
+          <div class="card panel section-gap">
+            <div class="whatsapp">
+              <div>
+                <p class="muted-label">Contato por WhatsApp</p>
+                <p style="margin: 0; font-weight: 800;">(99) 99999-9999</p>
+              </div>
+              <a class="button" id="whatsapp-link" target="_blank" rel="noreferrer">Falar no WhatsApp</a>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="button" type="button" data-go="resultado">← Ver meu resultado</button>
+            <button class="button secondary" type="button" id="restart-final">Reiniciar missão</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const whatsappNumber = "99999999999";
+      const whatsappMessage = "Olá! Gostaria de conversar sobre meu resultado e meu PDI.";
+
+      const situations = [
+        {
+          id: 1,
+          situation: "Você recebe uma nova tarefa no setor, mas as orientações iniciais estão incompletas. Qual é sua primeira atitude para começar com segurança?",
+          options: [
+            { key: "A", text: "Inicio a execução com o que já entendi e ajusto durante o processo" },
+            { key: "B", text: "Procuro alguém mais experiente para confirmar o caminho correto" },
+            { key: "C", text: "Organizo as informações disponíveis antes de tomar a primeira ação" },
+          ],
+        },
+        {
+          id: 2,
+          situation: "Durante a rotina, surge uma falha que pode atrasar a produção. O que você faz primeiro para reduzir o impacto?",
+          options: [
+            { key: "A", text: "Atuo rapidamente no problema para tentar normalizar a operação" },
+            { key: "B", text: "Aciono a equipe certa para resolver a situação em conjunto" },
+            { key: "C", text: "Verifico a causa provável antes de decidir a melhor solução" },
+          ],
+        },
+        {
+          id: 3,
+          situation: "Você precisa aprender uma atividade nova para apoiar melhor a equipe. Como prefere desenvolver essa habilidade?",
+          options: [
+            { key: "A", text: "Aprendo praticando e melhoro conforme ganho experiência" },
+            { key: "B", text: "Peço orientação a quem já domina a atividade" },
+            { key: "C", text: "Pesquiso o processo e entendo os detalhes antes de executar" },
+          ],
+        },
+        {
+          id: 4,
+          situation: "Você recebe várias demandas ao mesmo tempo e todas parecem importantes. Como decide por onde começar?",
+          options: [
+            { key: "A", text: "Começo pela tarefa mais urgente para gerar avanço imediato" },
+            { key: "B", text: "Alinho prioridades com a equipe ou liderança antes de seguir" },
+            { key: "C", text: "Listo as demandas, comparo prioridades e monto uma sequência de ação" },
+          ],
+        },
+        {
+          id: 5,
+          situation: "Você percebe que um colega cometeu um erro que pode afetar o resultado do trabalho. Qual atitude faz mais sentido para você?",
+          options: [
+            { key: "A", text: "Corrijo o problema rapidamente para evitar impacto maior" },
+            { key: "B", text: "Converso com o colega e ajudo a resolver sem exposição" },
+            { key: "C", text: "Entendo o que causou o erro para evitar que ele se repita" },
+          ],
+        },
+        {
+          id: 6,
+          situation: "Seu gestor pede uma melhoria em uma atividade do dia a dia. Como você conduz essa oportunidade?",
+          options: [
+            { key: "A", text: "Faço ajustes práticos e testo rapidamente se funcionam" },
+            { key: "B", text: "Converso com a equipe para construir uma melhoria aplicável" },
+            { key: "C", text: "Mapeio o processo atual antes de propor uma mudança" },
+          ],
+        },
+      ];
+
+      const profiles = [
+        {
+          type: "Técnico",
+          tagline: "Perfil Técnico",
+          description: "Você prefere agir rapidamente e resolver problemas na prática. Sua força está na execução direta e na capacidade de colocar a mão na massa quando o momento exige.",
+          areasSugeridas: ["Produção", "Manutenção"],
+          pdi: [
+            "MISSÃO 1: Aprimorar operação de máquinas",
+            "MISSÃO 2: Treinar resolução de problemas",
+            "MISSÃO 3: Melhorar atenção a detalhes",
+          ],
+          icon: "⚙️",
+          answerKey: "A",
+        },
+        {
+          type: "Colaborativo",
+          tagline: "Perfil Colaborativo",
+          description: "Você valoriza o trabalho em equipe e busca apoio quando necessário. Sua força está em construir pontes entre pessoas e fortalecer o ambiente de trabalho coletivo.",
+          areasSugeridas: ["RH", "Atendimento", "Equipes operacionais"],
+          pdi: [
+            "MISSÃO 1: Desenvolver comunicação assertiva",
+            "MISSÃO 2: Praticar escuta ativa",
+            "MISSÃO 3: Liderar pequenos projetos em equipe",
+          ],
+          icon: "🤝",
+          answerKey: "B",
+        },
+        {
+          type: "Analítico",
+          tagline: "Perfil Analítico",
+          description: "Você prefere entender antes de agir, planejando e pesquisando para tomar decisões fundamentadas. Sua força está na capacidade de enxergar padrões e estruturar soluções consistentes.",
+          areasSugeridas: ["Qualidade", "Planejamento", "Processos"],
+          pdi: [
+            "MISSÃO 1: Aprofundar análise de dados e indicadores",
+            "MISSÃO 2: Desenvolver planejamento estratégico",
+            "MISSÃO 3: Praticar tomada de decisão sob pressão",
+          ],
+          icon: "🔍",
+          answerKey: "C",
+        },
+      ];
+
+      const state = {
+        screen: "intro",
+        name: "",
+        index: 0,
+        answers: {},
+      };
+
+      const screens = document.querySelectorAll("[data-screen]");
+      const nameInput = document.querySelector("#name-input");
+      const nameSubmit = document.querySelector("#name-submit");
+      const questionText = document.querySelector("#question-text");
+      const optionsEl = document.querySelector("#options");
+      const nextButton = document.querySelector("#next-button");
+      const backButton = document.querySelector("#back-button");
+      const progressFill = document.querySelector("#progress-fill");
+      const dotsEl = document.querySelector("#dots");
+
+      function showScreen(screen) {
+        state.screen = screen;
+        screens.forEach((el) => el.classList.toggle("active", el.dataset.screen === screen));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        if (screen === "quiz") renderQuiz();
+        if (screen === "resultado") renderResult();
+        if (screen === "final") renderFinal();
+      }
+
+      function calculateProfile() {
+        const counts = { A: 0, B: 0, C: 0 };
+        Object.values(state.answers).forEach((answer) => counts[answer]++);
+        let dominant = "A";
+        if (counts.B > counts[dominant]) dominant = "B";
+        if (counts.C > counts[dominant]) dominant = "C";
+        return profiles.find((profile) => profile.answerKey === dominant) || profiles[0];
+      }
+
+      function renderQuiz() {
+        const situation = situations[state.index];
+        const selected = state.answers[situation.id] || "";
+
+        document.querySelector("#quiz-name").textContent = state.name;
+        document.querySelector("#quiz-current").textContent = String(state.index + 1);
+        document.querySelector("#quiz-total").textContent = String(situations.length);
+        document.querySelector("#question-number").textContent = String(state.index + 1);
+        questionText.textContent = situation.situation;
+        backButton.textContent = state.index === 0 ? "← Início" : "← Anterior";
+        progressFill.style.width = `${((state.index + 1) / situations.length) * 100}%`;
+        nextButton.disabled = !selected;
+        nextButton.textContent = state.index < situations.length - 1 ? "Próximo desafio →" : "Ver meu resultado 🏆";
+
+        optionsEl.innerHTML = "";
+        situation.options.forEach((option) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `option${selected === option.key ? " selected" : ""}`;
+          button.innerHTML = `<span class="letter">${option.key}</span><span>${option.text}</span>${selected === option.key ? '<span class="check">✓</span>' : ""}`;
+          button.addEventListener("click", () => {
+            state.answers[situation.id] = option.key;
+            renderQuiz();
+          });
+          optionsEl.appendChild(button);
+        });
+
+        dotsEl.innerHTML = "";
+        situations.forEach((item, index) => {
+          const dot = document.createElement("span");
+          if (index === state.index) dot.className = "current";
+          else if (state.answers[item.id]) dot.className = "done";
+          dotsEl.appendChild(dot);
+        });
+      }
+
+      function renderResult() {
+        if (!Object.keys(state.answers).length) {
+          showScreen("intro");
+          return;
+        }
+
+        const profile = calculateProfile();
+        document.querySelector("#profile-icon").textContent = profile.icon;
+        document.querySelector("#profile-title").textContent = profile.tagline;
+        document.querySelector("#profile-description").textContent = profile.description;
+        document.querySelector("#result-name").textContent = state.name ? `${state.name}, este é o seu resultado nesta missão.` : "";
+
+        const areas = document.querySelector("#profile-areas");
+        areas.innerHTML = "";
+        profile.areasSugeridas.forEach((area) => {
+          const chip = document.createElement("span");
+          chip.className = "chip";
+          chip.textContent = area;
+          areas.appendChild(chip);
+        });
+
+        const pdi = document.querySelector("#profile-pdi");
+        pdi.innerHTML = "";
+        profile.pdi.forEach((mission, index) => {
+          pdi.appendChild(createMission(mission, index));
+        });
+      }
+
+      function renderFinal() {
+        const profile = calculateProfile();
+        document.querySelector("#final-badge").innerHTML = `<span>${profile.icon}</span> ${profile.tagline}`;
+        document.querySelector("#whatsapp-link").href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+
+        const finalPdi = document.querySelector("#final-pdi");
+        finalPdi.innerHTML = "";
+        profile.pdi.forEach((mission, index) => {
+          finalPdi.appendChild(createMission(mission, index));
+        });
+      }
+
+      function createMission(text, index) {
+        const item = document.createElement("div");
+        item.className = "mission";
+        item.innerHTML = `<span class="mission-number">${index + 1}</span><span>${text}</span>`;
+        return item;
+      }
+
+      function restart() {
+        state.name = "";
+        state.index = 0;
+        state.answers = {};
+        nameInput.value = "";
+        showScreen("intro");
+      }
+
+      document.querySelectorAll("[data-go]").forEach((button) => {
+        button.addEventListener("click", () => showScreen(button.dataset.go));
+      });
+
+      document.querySelector("#name-form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const name = nameInput.value.trim();
+        if (!name) return;
+        state.name = name;
+        state.answers = {};
+        state.index = 0;
+        showScreen("quiz");
+      });
+
+      nameInput.addEventListener("input", () => {
+        nameSubmit.disabled = !nameInput.value.trim();
+      });
+
+      backButton.addEventListener("click", () => {
+        if (state.index === 0) {
+          showScreen("intro");
+          return;
+        }
+        state.index -= 1;
+        renderQuiz();
+      });
+
+      nextButton.addEventListener("click", () => {
+        const situation = situations[state.index];
+        if (!state.answers[situation.id]) return;
+        if (state.index < situations.length - 1) {
+          state.index += 1;
+          renderQuiz();
+          return;
+        }
+        showScreen("resultado");
+      });
+
+      document.querySelector("#restart-result").addEventListener("click", restart);
+      document.querySelector("#restart-final").addEventListener("click", restart);
+      nameSubmit.disabled = true;
+    </script>
+  </body>
+</html>
